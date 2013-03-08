@@ -1,0 +1,35 @@
+#You declare each potion like this (potion1, potion2, etc)
+potion1:
+  #Required items in the player's inventory
+  criteria:
+    - DIRT
+  #Required armor being worn. Put Wool for a wool head, Null for nothing, and Ignore to ignore
+  armor:
+    helmet: Wool
+    chestplate: DIAMOND_CHESTPLATE
+    leggings: Null
+    boots: GOLD_BOOTS
+  #Effects to give
+  effects:
+    #Number off effects like this (1, 2, 3, etc)
+    1:
+      #Name of effect
+      name: regeneration
+      #Level
+      level: 1
+#Sample number 2
+potion2:
+  criteria:
+    - DIAMOND_BLOCK
+  armor:
+    helmet: Ignore
+    chestplate: Ignore
+    leggings: Ignore
+    boots: Ignore
+  effects:
+    1:
+      name: slowness
+      level: 4
+    2:
+      name: mining-fatigue
+      level: 34
