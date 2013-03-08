@@ -3,7 +3,7 @@ potion1:
   #Required items in the player's inventory
   criteria:
     - DIRT
-  #Required armor being worn. Put Wool for a wool head, Null for nothing, and Ignore to ignore
+  #Required armor being worn. Put Wool for a non-armor helmet (such as wool or dirt on your head), Null for nothing, and Ignore to ignore
   armor:
     helmet: Wool
     chestplate: DIAMOND_CHESTPLATE
