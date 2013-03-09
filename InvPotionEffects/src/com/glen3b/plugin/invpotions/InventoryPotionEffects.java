@@ -16,6 +16,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 //import org.bukkit.potion.PotionEffect;
 //import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class InventoryPotionEffects extends JavaPlugin {
 	
@@ -34,28 +36,30 @@ public class InventoryPotionEffects extends JavaPlugin {
 	        @Override  
 	        public void run() {
 	        	Iterator<Entry<String, Object>> nondeepconfig = getConfig().getDefaultSection().getValues(false).entrySet().iterator();
-	        	while(nondeepconfig.hasNext()){
-        			Entry<String, Object> entry = nondeepconfig.next();
-        			String basekey = entry.getKey()+".";
-        			List<ArmorConfigValueType> armorcfg = ArmorConfigValueType.populateList(new String[]{
-        					getConfig().getString(basekey+"armor.helmet"),
-        					getConfig().getString(basekey+"armor.chestplate"),
-        					getConfig().getString(basekey+"armor.leggings"),
-        					getConfig().getString(basekey+"armor.boots")});
-        			List<Material> armor = Arrays.asList(new Material[]{
-        					Material.getMaterial(getConfig().getString(basekey+"armor.helmet")),
-        					Material.getMaterial(getConfig().getString(basekey+"armor.chestplate")),
-        					Material.getMaterial(getConfig().getString(basekey+"armor.leggings")),
-        					Material.getMaterial(getConfig().getString(basekey+"armor.boots"))});
-        		}
 	            for(Player p : getServer().getOnlinePlayers()) {
 	            	if(p != null){
 	            		PlayerInventory pi = p.getInventory();
-	            		for(int i = 0; i < 4; i++){
-	            			
-	            			
+	            		ItemStack[] parmor = pi.getArmorContents();
+	            		while(nondeepconfig.hasNext()){
+	            			Entry<String, Object> entry = nondeepconfig.next();
+	            			String basekey = entry.getKey()+".";
+	            			List<ArmorConfigValueType> armorcfg = ArmorConfigValueType.populateList(new String[]{
+	            					getConfig().getString(basekey+"armor.helmet"),
+	            					getConfig().getString(basekey+"armor.chestplate"),
+	            					getConfig().getString(basekey+"armor.leggings"),
+	            					getConfig().getString(basekey+"armor.boots")});
+	            			Material[] armor = new Material[]{
+	            					Material.getMaterial(getConfig().getString(basekey+"armor.helmet")),
+	            					Material.getMaterial(getConfig().getString(basekey+"armor.chestplate")),
+	            					Material.getMaterial(getConfig().getString(basekey+"armor.leggings")),
+	            					Material.getMaterial(getConfig().getString(basekey+"armor.boots"))};
+	            			for(int i = 0; i < 4; i++){
+		            			if(parmor[i] != null && parmor[i].getType() == armor[i]){
+		            				p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 999999999, 2));
+		            			}
+		            			}
+		            		}
 	            		}
-	            	}
 	                
 	            }
 	        
