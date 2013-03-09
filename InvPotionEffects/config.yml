@@ -1,9 +1,11 @@
-#You declare each potion like this (potion1, potion2, etc)
+#You declare each potion under a title (it doesn't matter what title)
 potion1:
   #Required items in the player's inventory
   criteria:
     - DIRT
-  #Required armor being worn. Put Wool for a non-armor helmet [ONLY WORKS ON HELMETS, will always check  helmet reguardless of field] (such as wool or dirt on your head), AIR for nothing, and Ignore to ignore
+  #Required armor being worn.
+  #Put Wool for a non-armor helmet [ONLY WORKS ON HELMETS, will always check helmet reguardless of field] (such as wool or dirt on your head)
+  #AIR for nothing, and Ignore to ignore
   armor:
     helmet: DIAMOND_HELMET
     chestplate: DIAMOND_CHESTPLATE
@@ -11,14 +13,11 @@ potion1:
     boots: GOLD_BOOTS
   #Effects to give
   effects:
-    #Number off effects like this (1, 2, 3, etc)
-    1:
-      #Name of effect
-      name: regeneration
-      #Level
-      level: 1
+    #List effects like this:
+    #POTIONEFFECTNAME::LEVEL
+    - REGENERATION::1
 #Sample number 2
-potion2:
+diamondpotion:
   criteria:
     - DIAMOND_BLOCK
   armor:
@@ -27,9 +26,5 @@ potion2:
     leggings: Ignore
     boots: Ignore
   effects:
-    1:
-      name: slowness
-      level: 4
-    2:
-      name: mining-fatigue
-      level: 34
+    - SLOWNESS::4
+    - REGENERATION::2
