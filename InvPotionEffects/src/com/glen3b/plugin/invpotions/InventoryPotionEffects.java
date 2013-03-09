@@ -37,16 +37,17 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            		while(nondeepconfig.hasNext()){
 	            			Entry<String, Object> entry = nondeepconfig.next();
 	            			String basekey = entry.getKey()+".";
-	            			List<ArmorConfigValueType> armorcfg = ArmorConfigValueType.populateList(new String[]{
+	            			String[] configvalues = new String[]{
 	            					getConfig().getString(basekey+"armor.helmet"),
 	            					getConfig().getString(basekey+"armor.chestplate"),
 	            					getConfig().getString(basekey+"armor.leggings"),
-	            					getConfig().getString(basekey+"armor.boots")});
+	            					getConfig().getString(basekey+"armor.boots")};
+	            			List<ArmorConfigValueType> armorcfg = ArmorConfigValueType.populateList(configvalues);
 	            			Material[] armor = new Material[]{
-	            					Material.getMaterial(getConfig().getString(basekey+"armor.helmet")),
-	            					Material.getMaterial(getConfig().getString(basekey+"armor.chestplate")),
-	            					Material.getMaterial(getConfig().getString(basekey+"armor.leggings")),
-	            					Material.getMaterial(getConfig().getString(basekey+"armor.boots"))};
+	            					Material.getMaterial(configvalues[0]),
+	            					Material.getMaterial(configvalues[1]),
+	            					Material.getMaterial(configvalues[2]),
+	            					Material.getMaterial(configvalues[3])};
 	            			//getLogger().log(Level.INFO, "Configuration prefix is "+basekey+", and their is a helmet of: "+getConfig().getString(basekey+"armor.helmet")+" with a material of "+armor[0]+", "+p.getDisplayName()+" has a helmet of "+parmor[3]);
 	            			boolean armorvalid = true;
 	            			boolean inventoryvalid = true;
@@ -81,7 +82,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            				}
 		            				PotionEffectType potionefc = PotionEffectType.getByName(components[0].toUpperCase());
 		            				p.removePotionEffect(potionefc);
-		            				p.addPotionEffect(new PotionEffect(potionefc, 1500, level));
+		            				p.addPotionEffect(new PotionEffect(potionefc, 500, level));
 			            		}
 	            			}
 		            		}

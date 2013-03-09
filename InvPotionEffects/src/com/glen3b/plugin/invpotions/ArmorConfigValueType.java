@@ -12,7 +12,7 @@ public enum ArmorConfigValueType {
 		if(configvalue != null){
 		if(configvalue.replaceAll("\n", "").replaceAll("\r", "") == "Wool"){
 			return ArmorConfigValueType.NonStandard;
-		}else if(configvalue.replaceAll("\n", "").replaceAll("\r", "") == "Ignore"){
+		}else if(configvalue.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", "") == "Ignore"){
 			return ArmorConfigValueType.Ignore;
 		}
 		return ArmorConfigValueType.Acknowledge;
