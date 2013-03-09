@@ -53,9 +53,14 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            					Material.getMaterial(getConfig().getString(basekey+"armor.chestplate")),
 	            					Material.getMaterial(getConfig().getString(basekey+"armor.leggings")),
 	            					Material.getMaterial(getConfig().getString(basekey+"armor.boots"))};
+	            			//getLogger().log(Level.INFO, "Configuration prefix is "+basekey+", and their is a helmet of: "+getConfig().getString(basekey+"armor.helmet")+" with a material of "+armor[0]+", "+p.getDisplayName()+" has a helmet of "+parmor[3]);
+	            			boolean armorvalid = true;
 	            			for(int i = 0; i < 4; i++){
-		            			if(parmor[i] != null && parmor[i].getType() == armor[i]){
-		            				p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 999999999, 2));
+		            			if(
+		            					!((armorcfg.get(i) == ArmorConfigValueType.Acknowledge && parmor[3-i].getType() == armor[i])
+		            					|| (armorcfg.get(i) == ArmorConfigValueType.NonStandard && nonstandardHelmet(pi))
+		            					|| (armorcfg.get(i) == ArmorConfigValueType.Ignore))){
+		            				armorvalid = false;
 		            			}
 		            			}
 		            		}
