@@ -1,6 +1,7 @@
 package com.glen3b.plugin.invpotions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -41,13 +42,19 @@ public class InventoryPotionEffects extends JavaPlugin {
         					getConfig().getString(basekey+"armor.chestplate"),
         					getConfig().getString(basekey+"armor.leggings"),
         					getConfig().getString(basekey+"armor.boots")});
-        			List<Material> armor = new ArrayList<Material>();
-        			armor.add(Material.getMaterial(getConfig().getString(basekey+"armor.helmet")));
+        			List<Material> armor = Arrays.asList(new Material[]{
+        					Material.getMaterial(getConfig().getString(basekey+"armor.helmet")),
+        					Material.getMaterial(getConfig().getString(basekey+"armor.chestplate")),
+        					Material.getMaterial(getConfig().getString(basekey+"armor.leggings")),
+        					Material.getMaterial(getConfig().getString(basekey+"armor.boots"))});
         		}
 	            for(Player p : getServer().getOnlinePlayers()) {
 	            	if(p != null){
 	            		PlayerInventory pi = p.getInventory();
-	            		
+	            		for(int i = 0; i < 4; i++){
+	            			
+	            			
+	            		}
 	            	}
 	                
 	            }
