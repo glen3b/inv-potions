@@ -6,6 +6,9 @@ potion1:
   #Required armor being worn.
   #Put Wool for a non-armor helmet [ONLY WORKS ON HELMETS, will always check helmet reguardless of field] (such as wool or dirt on your head)
   #AIR for nothing, and Ignore to ignore
+  
+  #Currently ignore does not seem to work (known bug)
+  
   armor:
     helmet: DIAMOND_HELMET
     chestplate: DIAMOND_CHESTPLATE
@@ -26,5 +29,5 @@ diamondpotion:
     leggings: Ignore
     boots: Ignore
   effects:
-    - SLOWNESS::4
+    - SLOW::4
     - REGENERATION::2
