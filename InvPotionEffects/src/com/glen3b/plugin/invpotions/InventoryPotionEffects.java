@@ -31,8 +31,8 @@ public class InventoryPotionEffects extends JavaPlugin {
 	    	
 	        @Override  
 	        public void run() {
-	        	Iterator<Entry<String, Object>> nondeepconfig = getConfig().getDefaultSection().getValues(false).entrySet().iterator();
 	            for(Player p : getServer().getOnlinePlayers()) {
+	            	Iterator<Entry<String, Object>> nondeepconfig = getConfig().getDefaultSection().getValues(false).entrySet().iterator();
 	            	if(p != null){
 	            		PlayerInventory pi = p.getInventory();
 	            		ItemStack[] parmor = pi.getArmorContents();
@@ -50,7 +50,6 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            					Material.getMaterial(configvalues[1]),
 	            					Material.getMaterial(configvalues[2]),
 	            					Material.getMaterial(configvalues[3])};
-	            			//getLogger().log(Level.INFO, "Configuration prefix is "+basekey+", and their is a helmet of: "+getConfig().getString(basekey+"armor.helmet")+" with a material of "+armor[0]+", "+p.getDisplayName()+" has a helmet of "+parmor[3]);
 	            			boolean armorvalid = true;
 	            			boolean inventoryvalid = true;
 	            			for(int i = 0; i < 4; i++){
@@ -175,6 +174,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 				}catch(NullPointerException n){
 					
 				}
+				sender.sendMessage("§aMatched inventory of "+target.getDisplayName()+" to requirements of "+args[0]+".");
 				return true;
     	}
     	return false;

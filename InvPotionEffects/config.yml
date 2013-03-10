@@ -3,6 +3,7 @@ potion1:
   #Required items in the player's inventory
   criteria:
     - DIRT
+    - DIAMOND_HOE
   #Required armor being worn.
   #Put Wool for a non-armor helmet [ONLY WORKS ON HELMETS, will always check helmet reguardless of field] (such as wool or dirt on your head)
   #AIR for nothing, and Ignore to ignore
@@ -18,16 +19,17 @@ potion1:
   effects:
     #List effects like this:
     #POTIONEFFECTNAME::LEVEL
-    - REGENERATION::1
+    - REGENERATION::3
+    - DAMAGE_RESISTANCE::1
 #Sample number 2
 diamondpotion:
   criteria:
     - DIAMOND_BLOCK
   armor:
     helmet: Ignore
-    chestplate: Ignore
+    chestplate: CHAINMAIL_CHESTPLATE
     leggings: Ignore
-    boots: Ignore
+    boots: IRON_BOOTS
   effects:
     - SLOW::4
-    - REGENERATION::2
+    - REGENERATION::1
