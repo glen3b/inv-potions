@@ -1,6 +1,5 @@
 package com.glen3b.plugin.invpotions;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -69,7 +68,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            				inventoryvalid = false;
 		            			}
 		            		}
-	            			if(armorvalid && inventoryvalid){
+	            			if(armorvalid && inventoryvalid && !p.hasPermission("invpotions.bypass")){
 	            				List<String> potioneffects = getConfig().getStringList(basekey+"effects");
 	            				for(int i = 0; i < potioneffects.size(); i++){
 		            				String[] components = potioneffects.get(i).split("::");
@@ -147,7 +146,6 @@ public class InventoryPotionEffects extends JavaPlugin {
 				};
 				
 				try{
-				target.getInventory().clear();    				
 				for(String str : items){
 					target.getInventory().addItem(new ItemStack(Material.getMaterial(str)));
 				}}catch(NullPointerException n){
