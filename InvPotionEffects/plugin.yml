@@ -1,3 +1,15 @@
 name: InventoryPotionEffectModifier
 main: com.glen3b.plugin.invpotions.InventoryPotionEffects
 version: 1.1
+commands:
+   matchinv:
+      description: Match a specific inventory requirement for a potion (this will clear your inventory)
+      usage: /matchinv <name of requirement> [player]
+      permission: invpotions.matchinv
+      permission-message: You cannot match your inventory to a potion effect requirement because you don't have invpotions.matchinv
+   invpotions:
+      description: Administer Inventory-Based Potions (do tasks such as reloading)
+      usage: /invpotions <reload>
+      permission: invpotions.administer
+      permission-message: You cannot administer Inventory-Based Potions
+

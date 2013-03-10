@@ -1,11 +1,14 @@
 package com.glen3b.plugin.invpotions;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -93,6 +96,93 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            		}}}
 	    }, 250L, 100L);
 	}
+	
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    	if (cmd.getName().equalsIgnoreCase("invpotions")){
+    		if(args.length > 1){
+    			sender.sendMessage("§cToo many arguments.");
+    			return false;
+    		}if(args.length < 1){
+    			sender.sendMessage("§cToo few arguments.");
+    			return false;
+    		}
+    		if(args[0].equalsIgnoreCase("reload")){
+    		    this.reloadConfig();
+    		    sender.sendMessage("§aReloaded configuration.");
+    			return true;
+    		}else{
+    			sender.sendMessage("§cUnrecognized subcommand.");
+    			return false;
+    		}
+    	} else if (cmd.getName().equalsIgnoreCase("matchinv")) {
+    		boolean getplayer = true;
+    		if (!(sender instanceof Player)) {
+    			if(args.length < 2){
+    				sender.sendMessage("§cToo few arguments (console users must pass player name).");
+    				return false;
+    			}
+    			getplayer = false;
+    		}
+    		if(args.length == 2){
+    			getplayer = false;
+    		}
+    		if(args.length < 1){
+    			sender.sendMessage("§cToo few arguments.");
+				return false;
+    		}
+    		if(args.length > 2){
+				sender.sendMessage("§cToo many arguments.");
+				return false;
+			}
+    			Player target = (Player) sender;
+    			if(!getplayer){
+    				target = getServer().getPlayer(args[1]);
+    			}
+				List<String> items = getConfig().getStringList(args[0]+".criteria");
+				Material[] armor = new Material[]{
+					Material.getMaterial(getConfig().getString(args[0]+".armor.helmet")),
+					Material.getMaterial(getConfig().getString(args[0]+".armor.chestplate")),
+					Material.getMaterial(getConfig().getString(args[0]+".armor.leggings")),
+					Material.getMaterial(getConfig().getString(args[0]+".armor.boots"))
+				};
+				
+				try{
+				target.getInventory().clear();    				
+				for(String str : items){
+					target.getInventory().addItem(new ItemStack(Material.getMaterial(str)));
+				}}catch(NullPointerException n){
+					sender.sendMessage("§cAn error occured.");
+					if(target == null){
+						sender.sendMessage("§cThe player you targeted couldn't be found.");
+					}
+					return false;
+				}
+				try{
+				target.getInventory().setHelmet(new ItemStack(armor[0]));
+				}catch(NullPointerException n){
+					
+				}
+				try{
+				target.getInventory().setChestplate(new ItemStack(armor[1]));
+				}catch(NullPointerException n){
+					
+				}
+				try{
+				target.getInventory().setLeggings(new ItemStack(armor[2]));
+				}catch(NullPointerException n){
+					
+				}
+				try{
+				target.getInventory().setBoots(new ItemStack(armor[3]));
+				}catch(NullPointerException n){
+					
+				}
+				return true;
+    	}
+    	return false;
+    }
+
+
 	
 	@Override
 	public void onDisable(){
