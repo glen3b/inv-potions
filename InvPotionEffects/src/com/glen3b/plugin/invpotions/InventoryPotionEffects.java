@@ -81,8 +81,12 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            					break;
 		            				}
 		            				PotionEffectType potionefc = PotionEffectType.getByName(components[0].toUpperCase());
+		            				try{
 		            				p.removePotionEffect(potionefc);
-		            				p.addPotionEffect(new PotionEffect(potionefc, 500, level));
+		            				p.addPotionEffect(new PotionEffect(potionefc, 380, level));
+		            				}catch(NullPointerException n){
+		            					getLogger().log(Level.WARNING, "There appears to be an invalid potion effect in your config file.");
+		            				}
 			            		}
 	            			}
 		            		}

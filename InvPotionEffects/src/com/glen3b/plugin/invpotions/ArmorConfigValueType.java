@@ -9,21 +9,18 @@ public enum ArmorConfigValueType {
 	NonStandard;
 	
 	public static ArmorConfigValueType getType(String configvalue){
-		if(configvalue != null){
-		if(configvalue.replaceAll("\n", "").replaceAll("\r", "") == "Wool"){
+		if(configvalue.replaceAll("\n", "").replaceAll("\r", "").equalsIgnoreCase("Wool")){
 			return ArmorConfigValueType.NonStandard;
-		}else if(configvalue.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", "") == "Ignore"){
+		}else if(configvalue.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", "").equalsIgnoreCase("Ignore")){
 			return ArmorConfigValueType.Ignore;
 		}
 		return ArmorConfigValueType.Acknowledge;
-		}
-		return ArmorConfigValueType.Ignore;
 	}
 	
 	public static List<ArmorConfigValueType> populateList(String[] configvalues){
 		List<ArmorConfigValueType> acvt = new ArrayList<ArmorConfigValueType>();
-		for(int i = 0; i < configvalues.length; i++){
-			acvt.add(getType(configvalues[i]));
+		for(String cfgvalue : configvalues){
+			acvt.add(getType(cfgvalue));
 		}
 		return acvt;
 	}
