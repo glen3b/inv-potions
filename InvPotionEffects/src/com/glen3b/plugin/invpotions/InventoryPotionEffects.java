@@ -65,11 +65,19 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            			boolean armorvalid = true;
 	            			boolean inventoryvalid = true;
 	            			for(int i = 0; i < 4; i++){
-		            			if(
-		            					!((armorcfg.get(i) == ArmorConfigValueType.Acknowledge && parmor[3-i].getType() == armor[i])
-		            					|| (armorcfg.get(i) == ArmorConfigValueType.NonStandard && nonstandardHelmet(pi))
-		            					|| (armorcfg.get(i) == ArmorConfigValueType.Ignore))){
-		            				armorvalid = false;
+		            			switch(armorcfg.get(i)){
+		            			case Acknowledge:
+		            				if(!(parmor[3-i].getType() == armor[i])){
+		            					armorvalid = false;
+		            				}
+		            				break;
+		            			case NonStandard:
+		            				if(!nonstandardHelmet(pi)){
+		            					armorvalid = false;
+		            				}
+		            				break;
+		            			case Ignore:
+		            				break;
 		            			}
 		            			}
 	            			List<String> criteria = getConfig().getStringList(basekey+"criteria");
@@ -96,7 +104,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            				PotionEffectType potionefc = PotionEffectType.getByName(components[0].toUpperCase());
 		            				try{
 		            				p.removePotionEffect(potionefc);
-		            				p.addPotionEffect(new PotionEffect(potionefc, 380, level));
+		            				p.addPotionEffect(new PotionEffect(potionefc, 375, level));
 		            				}catch(NullPointerException n){
 		            					getLogger().log(Level.WARNING, "There appears to be an invalid potion effect in your config file.");
 		            				}
