@@ -45,11 +45,23 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            					getConfig().getString(basekey+"armor.leggings"),
 	            					getConfig().getString(basekey+"armor.boots")};
 	            			List<ArmorConfigValueType> armorcfg = ArmorConfigValueType.populateList(configvalues);
+	            			int[] numbers = new int[]{-257,-257,-257,-257};
 	            			Material[] armor = new Material[]{
 	            					Material.getMaterial(configvalues[0]),
 	            					Material.getMaterial(configvalues[1]),
 	            					Material.getMaterial(configvalues[2]),
 	            					Material.getMaterial(configvalues[3])};
+	            			for(int i = 0; i < 4; i++){
+	            				boolean usenum = true;
+	            				try{
+	            					numbers[i] = Integer.parseInt(configvalues[i]);
+	            				}catch(NumberFormatException e){
+	            					usenum = false;
+	            				}
+	            				if(usenum){
+	            					armor[i] = Material.getMaterial(numbers[i]);
+	            				}
+	            			}
 	            			boolean armorvalid = true;
 	            			boolean inventoryvalid = true;
 	            			for(int i = 0; i < 4; i++){
