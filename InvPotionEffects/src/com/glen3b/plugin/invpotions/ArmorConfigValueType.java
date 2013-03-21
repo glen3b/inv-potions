@@ -17,6 +17,21 @@ public enum ArmorConfigValueType {
 		return ArmorConfigValueType.Acknowledge;
 	}
 	
+	@Override
+	public String toString(){
+		switch(this){
+		case Acknowledge:
+			return "Acknowledge";
+		case Ignore:
+			return "Ignore";
+		case NonStandard:
+			return "NonStandard";
+		default:
+			return null;
+		}
+		
+	}
+	
 	public static List<ArmorConfigValueType> populateList(String[] configvalues){
 		List<ArmorConfigValueType> acvt = new ArrayList<ArmorConfigValueType>();
 		for(String cfgvalue : configvalues){

@@ -32,7 +32,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 	        @Override  
 	        public void run() {
 	            for(Player p : getServer().getOnlinePlayers()) {
-	            	Iterator<Entry<String, Object>> nondeepconfig = getConfig().getDefaultSection().getValues(false).entrySet().iterator();
+	            	Iterator<Entry<String, Object>> nondeepconfig = getConfig().getRoot().getValues(false).entrySet().iterator();
 	            	if(p != null){
 	            		PlayerInventory pi = p.getInventory();
 	            		ItemStack[] parmor = pi.getArmorContents();
@@ -65,7 +65,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            			boolean armorvalid = true;
 	            			boolean inventoryvalid = true;
 	            			for(int i = 0; i < 4; i++){
-		            			switch(armorcfg.get(i)){
+	            				switch(armorcfg.get(i)){
 		            			case Acknowledge:
 		            				if(!(parmor[3-i].getType() == armor[i])){
 		            					armorvalid = false;
