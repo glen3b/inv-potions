@@ -157,12 +157,31 @@ public class InventoryPotionEffects extends JavaPlugin {
     				target = getServer().getPlayer(args[1]);
     			}
 				List<String> items = getConfig().getStringList(args[0]+".criteria");
+				String[] cfgvalues = new String[]{
+						getConfig().getString(args[0]+".armor.helmet"),
+						getConfig().getString(args[0]+".armor.chestplate"),
+						getConfig().getString(args[0]+".armor.leggings"),
+						getConfig().getString(args[0]+".armor.boots")
+						};
+				
 				Material[] armor = new Material[]{
-					Material.getMaterial(getConfig().getString(args[0]+".armor.helmet")),
-					Material.getMaterial(getConfig().getString(args[0]+".armor.chestplate")),
-					Material.getMaterial(getConfig().getString(args[0]+".armor.leggings")),
-					Material.getMaterial(getConfig().getString(args[0]+".armor.boots"))
+					Material.getMaterial(cfgvalues[0]),
+					Material.getMaterial(cfgvalues[1]),
+					Material.getMaterial(cfgvalues[2]),
+					Material.getMaterial(cfgvalues[3])
 				};
+				int[] numbers = new int[]{-257,-257,-257,-257};
+    			for(int i = 0; i < 4; i++){
+    				boolean usenum = true;
+    				try{
+    					numbers[i] = Integer.parseInt(cfgvalues[i]);
+    				}catch(NumberFormatException e){
+    					usenum = false;
+    				}
+    				if(usenum){
+    					armor[i] = Material.getMaterial(numbers[i]);
+    				}
+    			}
 				
 				try{
 				for(String str : items){
@@ -172,27 +191,31 @@ public class InventoryPotionEffects extends JavaPlugin {
 					if(target == null){
 						sender.sendMessage("§cThe player you targeted couldn't be found.");
 					}
-					return false;
+					return true;
 				}
 				try{
-				target.getInventory().setHelmet(new ItemStack(armor[0]));
+					if(ArmorConfigValueType.getType(cfgvalues[0]) != ArmorConfigValueType.Ignore) target.getInventory().setHelmet(new ItemStack(armor[0]));
 				}catch(NullPointerException n){
-					
+					sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
+					return true;
 				}
 				try{
-				target.getInventory().setChestplate(new ItemStack(armor[1]));
+					if(ArmorConfigValueType.getType(cfgvalues[1]) != ArmorConfigValueType.Ignore) target.getInventory().setChestplate(new ItemStack(armor[1]));
 				}catch(NullPointerException n){
-					
+					sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
+					return true;
 				}
 				try{
-				target.getInventory().setLeggings(new ItemStack(armor[2]));
+					if(ArmorConfigValueType.getType(cfgvalues[2]) != ArmorConfigValueType.Ignore) target.getInventory().setLeggings(new ItemStack(armor[2]));
 				}catch(NullPointerException n){
-					
+					sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
+					return true;
 				}
 				try{
-				target.getInventory().setBoots(new ItemStack(armor[3]));
+					if(ArmorConfigValueType.getType(cfgvalues[3]) != ArmorConfigValueType.Ignore) target.getInventory().setBoots(new ItemStack(armor[3]));
 				}catch(NullPointerException n){
-					
+					sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
+					return true;
 				}
 				sender.sendMessage("§aMatched inventory of "+target.getDisplayName()+" to requirements of "+args[0]+".");
 				return true;
