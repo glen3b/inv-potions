@@ -89,6 +89,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            			}
 		            			}
 	            			List<String> criteria = getConfig().getStringList(basekey+"criteria");
+	            			if(criteria != null){
 	            			for(int i = 0; i < criteria.size(); i++){
 	            				ItemStack checking;
 	            				boolean useItemStack = false;
@@ -102,7 +103,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            				inventoryvalid = false;
 		            			}
 		            		}
-	            			
+	            			}
 	            			String handitem = getConfig().getString(basekey+"handitem");
 	            			if(handitem != null){
 	            				ItemStack checking;
