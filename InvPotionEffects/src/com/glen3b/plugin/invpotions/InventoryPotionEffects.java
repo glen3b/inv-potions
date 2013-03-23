@@ -67,7 +67,15 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            			for(int i = 0; i < 4; i++){
 	            				switch(armorcfg.get(i)){
 		            			case Acknowledge:
-		            				if(!(parmor[3-i].getType() == armor[i])){
+		            				ItemStack checking;
+		            				boolean useItemStack = false;
+		            				if(configvalues[i].split(":").length == 1){
+		            					checking = new ItemStack(Material.getMaterial(configvalues[i]));
+		        					}else{
+		        						useItemStack = true;
+		        						checking = new ItemStack(Material.getMaterial(configvalues[i].split(":")[0]), 1, Short.parseShort(configvalues[i].split(":")[1]));
+		        					}
+		            				if(!(useItemStack ? parmor[3-i].getType() == checking.getType() && parmor[3-i].getDurability() == checking.getDurability() : parmor[3-i].getType() == Material.getMaterial(configvalues[i]))){
 		            					armorvalid = false;
 		            				}
 		            				break;
