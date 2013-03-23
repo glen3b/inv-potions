@@ -267,8 +267,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 				}}
 				catch(NullPointerException n){
 					sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
-					throw new IllegalArgumentException(n);
-					//return true;
+					return true;
 				}catch(NumberFormatException nf){
 					sender.sendMessage("§cError parsing damage value in configuration.");
 					return true;
