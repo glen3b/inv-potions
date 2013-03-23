@@ -27,3 +27,6 @@ permissions:
     invpotions.bypass:
         description: Allows you to bypass potion effects
         default: false
+    invpotions.potion.*:
+        description: Allow all potion effects
+        default: true

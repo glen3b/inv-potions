@@ -87,7 +87,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            				inventoryvalid = false;
 		            			}
 		            		}
-	            			if(armorvalid && inventoryvalid && !p.hasPermission("invpotions.bypass")){
+	            			if(armorvalid && inventoryvalid && !p.hasPermission("invpotions.bypass") && (p.hasPermission("invpotions.potion."+entry.getKey()) || p.hasPermission("invpotions.potion.*")) ){
 	            				List<String> potioneffects = getConfig().getStringList(basekey+"effects");
 	            				for(int i = 0; i < potioneffects.size(); i++){
 		            				String[] components = potioneffects.get(i).split("::");
