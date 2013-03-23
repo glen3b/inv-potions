@@ -189,7 +189,7 @@ public class InventoryPotionEffects extends JavaPlugin {
     					armor[i] = Material.getMaterial(numbers[i]);
     				}
     			}
-				
+    			
 				try{
 				for(String str : items){
 					if(str.split(":").length == 1){
@@ -204,31 +204,40 @@ public class InventoryPotionEffects extends JavaPlugin {
 					}
 					return true;
 				}catch(NumberFormatException nf){
-					sender.sendMessage("§cError parsing damage value.");
+					sender.sendMessage("§cError parsing damage value in configuration.");
 					return true;
 				}
 				try{
-					if(ArmorConfigValueType.getType(cfgvalues[0]) != ArmorConfigValueType.Ignore) target.getInventory().setHelmet(new ItemStack(armor[0]));
+					ItemStack add;
+	    			if(cfgvalues[0].split(":").length == 1){
+						add = new ItemStack(armor[0]);
+					}else{
+						add = new ItemStack(armor[0], 1, Short.parseShort(cfgvalues[0].split(":")[1]));
+					}
+					if(ArmorConfigValueType.getType(cfgvalues[0]) != ArmorConfigValueType.Ignore) target.getInventory().setHelmet(add);
+	    			if(cfgvalues[1].split(":").length == 1){
+						add = new ItemStack(armor[1]);
+					}else{
+						add = new ItemStack(armor[1], 1, Short.parseShort(cfgvalues[1].split(":")[1]));
+					}
+					if(ArmorConfigValueType.getType(cfgvalues[1]) != ArmorConfigValueType.Ignore) target.getInventory().setChestplate(add);
+	    			if(cfgvalues[2].split(":").length == 1){
+						add = new ItemStack(armor[2]);
+					}else{
+						add = new ItemStack(armor[2], 1, Short.parseShort(cfgvalues[2].split(":")[1]));
+					}
+					if(ArmorConfigValueType.getType(cfgvalues[2]) != ArmorConfigValueType.Ignore) target.getInventory().setLeggings(add);
+	    			if(cfgvalues[3].split(":").length == 1){
+						add = new ItemStack(armor[3]);
+					}else{
+						add = new ItemStack(armor[3], 1, Short.parseShort(cfgvalues[3].split(":")[1]));
+					}
+					if(ArmorConfigValueType.getType(cfgvalues[3]) != ArmorConfigValueType.Ignore) target.getInventory().setBoots(add);
 				}catch(NullPointerException n){
 					sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
 					return true;
-				}
-				try{
-					if(ArmorConfigValueType.getType(cfgvalues[1]) != ArmorConfigValueType.Ignore) target.getInventory().setChestplate(new ItemStack(armor[1]));
-				}catch(NullPointerException n){
-					sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
-					return true;
-				}
-				try{
-					if(ArmorConfigValueType.getType(cfgvalues[2]) != ArmorConfigValueType.Ignore) target.getInventory().setLeggings(new ItemStack(armor[2]));
-				}catch(NullPointerException n){
-					sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
-					return true;
-				}
-				try{
-					if(ArmorConfigValueType.getType(cfgvalues[3]) != ArmorConfigValueType.Ignore) target.getInventory().setBoots(new ItemStack(armor[3]));
-				}catch(NullPointerException n){
-					sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
+				}catch(NumberFormatException nf){
+					sender.sendMessage("§cError parsing damage value in configuration.");
 					return true;
 				}
 				sender.sendMessage("§aMatched inventory of "+target.getDisplayName()+" to requirements of "+args[0]+".");
