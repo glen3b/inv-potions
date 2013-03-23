@@ -1,5 +1,7 @@
 #You declare each potion under a title (it doesn't matter what title)
 potion1:
+  # Item in hand, do not define if you do not want an item in hand
+  ####handitem: NULL
   #Required items in the player's inventory
   criteria:
     - DIRT
@@ -7,9 +9,6 @@ potion1:
   #Required armor being worn.
   #Put Wool for a non-armor helmet [ONLY WORKS ON HELMETS, will always check helmet reguardless of field] (such as wool or dirt on your head)
   #AIR for nothing, and Ignore to ignore
-  
-  #Currently ignore does not seem to work (known bug)
-  
   armor:
     helmet: DIAMOND_HELMET
     chestplate: DIAMOND_CHESTPLATE
@@ -23,6 +22,7 @@ potion1:
     - DAMAGE_RESISTANCE::1
 #Sample number 2
 diamondpotion:
+  handitem: DIAMOND_SWORD
   criteria:
     - DIAMOND_BLOCK
   armor:

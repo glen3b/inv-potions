@@ -102,6 +102,22 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            				inventoryvalid = false;
 		            			}
 		            		}
+	            			
+	            			String handitem = getConfig().getString(basekey+"handitem");
+	            			if(handitem != null){
+	            				ItemStack checking;
+	            				boolean useItemStack = false;
+	            				if(handitem.split(":").length == 1){
+	            					checking = new ItemStack(Material.getMaterial(handitem));
+	        					}else{
+	        						useItemStack = true;
+	        						checking = new ItemStack(Material.getMaterial(handitem.split(":")[0]), 1, Short.parseShort(handitem.split(":")[1]));
+	        					}
+	            				if(!(useItemStack ? pi.getItemInHand().getType() == checking.getType() && pi.getItemInHand().getDurability() == checking.getDurability() : pi.getItemInHand().getType() == Material.getMaterial(handitem))){
+		            				inventoryvalid = false;
+		            			}
+	            			}
+	            			
 	            			if(armorvalid && inventoryvalid && !p.hasPermission("invpotions.bypass") && (p.hasPermission("invpotions.potion."+entry.getKey()) || p.hasPermission("invpotions.potion.*")) ){
 	            				List<String> potioneffects = getConfig().getStringList(basekey+"effects");
 	            				for(int i = 0; i < potioneffects.size(); i++){
@@ -119,7 +135,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            				PotionEffectType potionefc = PotionEffectType.getByName(components[0].toUpperCase());
 		            				try{
 		            				p.removePotionEffect(potionefc);
-		            				p.addPotionEffect(new PotionEffect(potionefc, 375, level));
+		            				p.addPotionEffect(new PotionEffect(potionefc, 200, level));
 		            				}catch(NullPointerException n){
 		            					getLogger().log(Level.WARNING, "There appears to be an invalid potion effect in your config file.");
 		            				}
@@ -127,7 +143,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            			}
 		            		}
 	            		}}}
-	    }, 250L, 100L);
+	    }, 150L, 90L);
 	}
 	
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
