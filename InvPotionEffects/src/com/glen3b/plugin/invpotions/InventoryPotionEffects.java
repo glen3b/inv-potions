@@ -82,8 +82,15 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            			}
 	            			List<String> criteria = getConfig().getStringList(basekey+"criteria");
 	            			for(int i = 0; i < criteria.size(); i++){
-	            				Material checking = Material.getMaterial(criteria.get(i));
-		            			if(checking != null && !pi.contains(checking)){
+	            				ItemStack checking;
+	            				boolean useItemStack = false;
+	            				if(criteria.get(i).split(":").length == 1){
+	            					checking = new ItemStack(Material.getMaterial(criteria.get(i)));
+	        					}else{
+	        						useItemStack = true;
+	        						checking = new ItemStack(Material.getMaterial(criteria.get(i).split(":")[0]), 1, Short.parseShort(criteria.get(i).split(":")[1]));
+	        					}
+	            				if(checking != null && !(useItemStack ? pi.containsAtLeast(checking, 1) : pi.contains(Material.getMaterial(criteria.get(i))))){
 		            				inventoryvalid = false;
 		            			}
 		            		}
@@ -185,12 +192,19 @@ public class InventoryPotionEffects extends JavaPlugin {
 				
 				try{
 				for(String str : items){
-					target.getInventory().addItem(new ItemStack(Material.getMaterial(str)));
+					if(str.split(":").length == 1){
+						target.getInventory().addItem(new ItemStack(Material.getMaterial(str)));
+					}else{
+						target.getInventory().addItem(new ItemStack(Material.getMaterial(str.split(":")[0]), 1, Short.parseShort(str.split(":")[1])));
+					}
 				}}catch(NullPointerException n){
 					sender.sendMessage("§cAn error occured.");
 					if(target == null){
 						sender.sendMessage("§cThe player you targeted couldn't be found.");
 					}
+					return true;
+				}catch(NumberFormatException nf){
+					sender.sendMessage("§cError parsing damage value.");
 					return true;
 				}
 				try{
