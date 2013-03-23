@@ -98,7 +98,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 	        						useItemStack = true;
 	        						checking = new ItemStack(Material.getMaterial(criteria.get(i).split(":")[0]), 1, Short.parseShort(criteria.get(i).split(":")[1]));
 	        					}
-	            				if(checking != null && !(useItemStack ? pi.containsAtLeast(checking, 1) : pi.contains(Material.getMaterial(criteria.get(i))))){
+	            				if(checking != null && Material.getMaterial(criteria.get(i)) != null && !(useItemStack ? pi.containsAtLeast(checking, 1) : pi.contains(Material.getMaterial(criteria.get(i))))){
 		            				inventoryvalid = false;
 		            			}
 		            		}
