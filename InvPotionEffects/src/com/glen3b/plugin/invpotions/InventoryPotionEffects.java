@@ -233,33 +233,42 @@ public class InventoryPotionEffects extends JavaPlugin {
 				}
 				try{
 					ItemStack add;
+					if(ArmorConfigValueType.getType(cfgvalues[0]) != ArmorConfigValueType.Ignore){
 	    			if(cfgvalues[0].split(":").length == 1){
 						add = new ItemStack(armor[0]);
 					}else{
 						add = new ItemStack(armor[0], 1, Short.parseShort(cfgvalues[0].split(":")[1]));
 					}
-					if(ArmorConfigValueType.getType(cfgvalues[0]) != ArmorConfigValueType.Ignore) target.getInventory().setHelmet(add);
-	    			if(cfgvalues[1].split(":").length == 1){
+					target.getInventory().setHelmet(add);
+					}
+					if(ArmorConfigValueType.getType(cfgvalues[1]) != ArmorConfigValueType.Ignore){
+					if(cfgvalues[1].split(":").length == 1){
 						add = new ItemStack(armor[1]);
 					}else{
 						add = new ItemStack(armor[1], 1, Short.parseShort(cfgvalues[1].split(":")[1]));
 					}
-					if(ArmorConfigValueType.getType(cfgvalues[1]) != ArmorConfigValueType.Ignore) target.getInventory().setChestplate(add);
-	    			if(cfgvalues[2].split(":").length == 1){
+					target.getInventory().setChestplate(add);
+					}
+					if(ArmorConfigValueType.getType(cfgvalues[2]) != ArmorConfigValueType.Ignore){
+					if(cfgvalues[2].split(":").length == 1){
 						add = new ItemStack(armor[2]);
 					}else{
 						add = new ItemStack(armor[2], 1, Short.parseShort(cfgvalues[2].split(":")[1]));
 					}
-					if(ArmorConfigValueType.getType(cfgvalues[2]) != ArmorConfigValueType.Ignore) target.getInventory().setLeggings(add);
-	    			if(cfgvalues[3].split(":").length == 1){
+					target.getInventory().setLeggings(add);
+					}
+					if(ArmorConfigValueType.getType(cfgvalues[3]) != ArmorConfigValueType.Ignore){
+					if(cfgvalues[3].split(":").length == 1){
 						add = new ItemStack(armor[3]);
 					}else{
 						add = new ItemStack(armor[3], 1, Short.parseShort(cfgvalues[3].split(":")[1]));
 					}
-					if(ArmorConfigValueType.getType(cfgvalues[3]) != ArmorConfigValueType.Ignore) target.getInventory().setBoots(add);
-				}catch(NullPointerException n){
+					target.getInventory().setBoots(add);
+				}}
+				catch(NullPointerException n){
 					sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
-					return true;
+					throw new IllegalArgumentException(n);
+					//return true;
 				}catch(NumberFormatException nf){
 					sender.sendMessage("§cError parsing damage value in configuration.");
 					return true;
