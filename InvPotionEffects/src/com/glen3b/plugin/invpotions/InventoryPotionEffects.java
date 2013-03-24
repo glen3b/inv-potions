@@ -273,6 +273,16 @@ public class InventoryPotionEffects extends JavaPlugin {
 					sender.sendMessage("§cError parsing damage value in configuration.");
 					return true;
 				}
+				String handitem = getConfig().getString(args[0]+".handitem");
+    			if(handitem != null){
+    				ItemStack checking;
+    				if(handitem.split(":").length == 1){
+    					checking = new ItemStack(Material.getMaterial(handitem));
+					}else{
+						checking = new ItemStack(Material.getMaterial(handitem.split(":")[0]), 1, Short.parseShort(handitem.split(":")[1]));
+					}
+    				target.setItemInHand(checking);
+    			}
 				sender.sendMessage("§aMatched inventory of "+target.getDisplayName()+" to requirements of "+args[0]+".");
 				return true;
     	}
