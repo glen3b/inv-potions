@@ -119,6 +119,12 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            			}
 	            			}
 	            			
+	            			//And now, check for blacklisted items
+	            			List<String> blacklist = getConfig().getStringList(basekey+"blacklist");
+	            			if(blacklist != null){
+	            				// TODO: Add blacklist check here
+	            			}
+	            			
 	            			if(armorvalid && inventoryvalid && !p.hasPermission("invpotions.bypass") && (p.hasPermission("invpotions.potion."+entry.getKey()) || p.hasPermission("invpotions.potion.*")) ){
 	            				List<String> potioneffects = getConfig().getStringList(basekey+"effects");
 	            				for(int i = 0; i < potioneffects.size(); i++){
