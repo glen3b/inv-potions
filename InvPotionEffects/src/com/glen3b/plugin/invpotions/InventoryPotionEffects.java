@@ -122,7 +122,15 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            			//And now, check for blacklisted items
 	            			List<String> blacklist = getConfig().getStringList(basekey+"blacklist");
 	            			if(blacklist != null){
-	            				// TODO: Add blacklist check here
+	            				for(int i = 0; i < blacklist.size(); i++){
+	            					String itemroot = blacklist.get(i);
+	            					Material checking = Material.getMaterial(itemroot.split(":")[0]);
+		            				boolean useDamage = false;
+		            				useDamage = itemroot.split(":").length > 1;
+		            				if(useDamage ? pi.containsAtLeast(new ItemStack(checking, 1, Short.parseShort(itemroot.split(":")[1])), 1) : pi.contains(checking)){
+		            					inventoryvalid = false;
+		            				}
+	            				}
 	            			}
 	            			
 	            			if(armorvalid && inventoryvalid && !p.hasPermission("invpotions.bypass") && (p.hasPermission("invpotions.potion."+entry.getKey()) || p.hasPermission("invpotions.potion.*")) ){
