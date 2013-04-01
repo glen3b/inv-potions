@@ -283,7 +283,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 					}
     				target.setItemInHand(checking);
     			}
-				sender.sendMessage("§aMatched inventory of "+target.getDisplayName()+" to requirements of "+args[0]+".");
+				sender.sendMessage("§aMatched inventory of "+target.getDisplayName()+"§a to requirements of "+args[0]+".");
 				return true;
     	}
     	return false;
