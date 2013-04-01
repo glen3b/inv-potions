@@ -214,7 +214,16 @@ public class InventoryPotionEffects extends JavaPlugin {
     					armor[i] = Material.getMaterial(numbers[i]);
     				}
     			}
-    			
+    				String handitem = getConfig().getString(args[0]+".handitem");
+    			if(handitem != null){
+    				ItemStack checking;
+    				if(handitem.split(":").length == 1){
+    					checking = new ItemStack(Material.getMaterial(handitem));
+					}else{
+						checking = new ItemStack(Material.getMaterial(handitem.split(":")[0]), 1, Short.parseShort(handitem.split(":")[1]));
+					}
+    				target.setItemInHand(checking);
+    			}
 				try{
 				for(String str : items){
 					if(str.split(":").length == 1){
@@ -273,16 +282,6 @@ public class InventoryPotionEffects extends JavaPlugin {
 					sender.sendMessage("§cError parsing damage value in configuration.");
 					return true;
 				}
-				String handitem = getConfig().getString(args[0]+".handitem");
-    			if(handitem != null){
-    				ItemStack checking;
-    				if(handitem.split(":").length == 1){
-    					checking = new ItemStack(Material.getMaterial(handitem));
-					}else{
-						checking = new ItemStack(Material.getMaterial(handitem.split(":")[0]), 1, Short.parseShort(handitem.split(":")[1]));
-					}
-    				target.setItemInHand(checking);
-    			}
 				sender.sendMessage("§aMatched inventory of "+target.getDisplayName()+"§a to requirements of "+args[0]+".");
 				return true;
     	}
