@@ -1,6 +1,6 @@
 name: InventoryPotionEffectModifier
 main: com.glen3b.plugin.invpotions.InventoryPotionEffects
-version: 1.4
+version: 1.5
 commands:
    matchinv:
       description: Match a specific inventory requirement for a potion
