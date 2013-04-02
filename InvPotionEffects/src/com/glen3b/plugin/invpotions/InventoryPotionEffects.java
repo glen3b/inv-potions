@@ -1,5 +1,6 @@
 package com.glen3b.plugin.invpotions;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -179,7 +180,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 	
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     	if (cmd.getName().equalsIgnoreCase("invpotions")){
-    		if(args.length > 1){
+    		if(args.length > 2){
     			sender.sendMessage("§cToo many arguments.");
     			return false;
     		}if(args.length < 1){
@@ -189,6 +190,38 @@ public class InventoryPotionEffects extends JavaPlugin {
     		if(args[0].equalsIgnoreCase("reload")){
     		    this.reloadConfig();
     		    sender.sendMessage("§aReloaded configuration.");
+    			return true;
+    		}else if(args[0].equalsIgnoreCase("add")){
+    		    if(!(sender instanceof Player)){
+    		    	sender.sendMessage("§cI'm sorry, at the moment only players can use this command.");
+    		    	return true;
+    		    }
+    		    if(args.length < 2){
+    		    	sender.sendMessage("§cToo few arguments. Please specify a configuration name for this potion.");
+    		    	return false;
+    		    }
+    		    if(args.length < 3){
+    		    	sender.sendMessage("§cToo few arguments. Please specify potion effects to use.");
+    		    	return false;
+    		    }
+    		    Player invbase = (Player) sender;
+    		    List<String> itemsInInv = new ArrayList<String>();
+    		    for(ItemStack item : invbase.getInventory().getContents()){
+    		    	itemsInInv.add(item.getType().toString());
+    		    }
+    		    getConfig().set(args[1]+".criteria", itemsInInv);
+    		    getConfig().set(args[1]+".armor.helmet", invbase.getInventory().getHelmet().getType().toString());
+    		    getConfig().set(args[1]+".armor.chestplate", invbase.getInventory().getChestplate().getType().toString());
+    		    getConfig().set(args[1]+".armor.leggings", invbase.getInventory().getLeggings().getType().toString());
+    		    getConfig().set(args[1]+".armor.boots", invbase.getInventory().getBoots().getType().toString());
+    		    List<String> potionFx = new ArrayList<String>();
+    		    for(int i = 2; i < args.length; i++){
+    		    	potionFx.add(args[i]);
+    		    }
+    		    getConfig().set(args[1]+".effects", potionFx);
+    		    saveConfig();
+    		    reloadConfig();
+    		    sender.sendMessage("§aAdded potion effect "+args[1]+" matching your inventory.");
     			return true;
     		}else{
     			sender.sendMessage("§cUnrecognized subcommand.");
