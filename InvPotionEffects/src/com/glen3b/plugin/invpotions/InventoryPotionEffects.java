@@ -157,18 +157,18 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            				try{
 		            				level = Integer.parseInt(components[1])-1;
 		            				}catch(NumberFormatException n){
-		            					getLogger().log(Level.WARNING, "Your potion effect configuration has an invalid number as a level.");
+		            					getLogger().log(Level.WARNING, "Your potion effect configuration has an invalid number as a level in "+basekey);
 		            					break;
 		            				}catch(ArrayIndexOutOfBoundsException n){
-		            					getLogger().log(Level.WARNING, "Your potion effect configuration does not have a valid splitting character ('::') in one effect configuration.");
-		            					break;
+		            					getLogger().log(Level.WARNING, "Your potion effect configuration does not have a valid splitting character ('::') in "+basekey+" Attempting to assume level 1.");
+		            					level = 0;
 		            				}
 		            				PotionEffectType potionefc = PotionEffectType.getByName(components[0].toUpperCase());
 		            				try{
 		            				p.removePotionEffect(potionefc);
 		            				p.addPotionEffect(new PotionEffect(potionefc, 200, level));
 		            				}catch(NullPointerException n){
-		            					getLogger().log(Level.WARNING, "There appears to be an invalid potion effect in your config file.");
+		            					getLogger().log(Level.WARNING, "There appears to be an invalid potion effect in your config file (check in "+entry.getKey()+").");
 		            				}
 			            		}
 	            			}
