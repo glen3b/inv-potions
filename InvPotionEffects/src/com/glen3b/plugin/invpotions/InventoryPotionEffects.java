@@ -180,10 +180,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 	
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     	if (cmd.getName().equalsIgnoreCase("invpotions")){
-    		if(args.length > 2){
-    			sender.sendMessage("§cToo many arguments.");
-    			return false;
-    		}if(args.length < 1){
+    		if(args.length < 1){
     			sender.sendMessage("§cToo few arguments.");
     			return false;
     		}
