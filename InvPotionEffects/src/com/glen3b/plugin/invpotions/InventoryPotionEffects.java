@@ -19,9 +19,23 @@ public class InventoryPotionEffects extends JavaPlugin {
 	
 	private int taskid;
 	
-	protected boolean nonstandardHelmet(PlayerInventory pi){
-		ItemStack h = pi.getHelmet();
-		return h != null && h.getType() != Material.LEATHER_HELMET && h.getType() != Material.GOLD_HELMET && h.getType() != Material.CHAINMAIL_HELMET && h.getType() != Material.IRON_HELMET && h.getType() != Material.DIAMOND_HELMET;
+	protected boolean nonstandardArmor(PlayerInventory pi, int index){
+		switch(index){
+		case 0:
+			ItemStack h = pi.getHelmet();
+			return h != null && h.getType() != Material.AIR && h.getType() != Material.LEATHER_HELMET && h.getType() != Material.GOLD_HELMET && h.getType() != Material.CHAINMAIL_HELMET && h.getType() != Material.IRON_HELMET && h.getType() != Material.DIAMOND_HELMET;
+		case 1:
+			ItemStack c = pi.getChestplate();
+			return c != null && c.getType() != Material.AIR && c.getType() != Material.LEATHER_CHESTPLATE && c.getType() != Material.GOLD_CHESTPLATE && c.getType() != Material.CHAINMAIL_CHESTPLATE && c.getType() != Material.IRON_CHESTPLATE && c.getType() != Material.DIAMOND_CHESTPLATE;
+		case 2:
+			ItemStack l = pi.getLeggings();
+			return l != null && l.getType() != Material.AIR && l.getType() != Material.LEATHER_LEGGINGS && l.getType() != Material.GOLD_LEGGINGS && l.getType() != Material.CHAINMAIL_LEGGINGS && l.getType() != Material.IRON_LEGGINGS && l.getType() != Material.DIAMOND_LEGGINGS;
+		case 3:
+			ItemStack b = pi.getBoots();
+			return b != null && b.getType() != Material.AIR && b.getType() != Material.LEATHER_BOOTS && b.getType() != Material.GOLD_BOOTS && b.getType() != Material.CHAINMAIL_BOOTS && b.getType() != Material.IRON_BOOTS && b.getType() != Material.DIAMOND_BOOTS;
+		default:
+			return false;
+		}
 	}
 	
 	@Override
@@ -81,7 +95,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 		            				}
 		            				break;
 		            			case NonStandard:
-		            				if(!nonstandardHelmet(pi)){
+		            				if(!nonstandardArmor(pi, 3-i)){
 		            					armorvalid = false;
 		            				}
 		            				break;
