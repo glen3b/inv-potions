@@ -15,8 +15,7 @@ potion1:
     - DIRT
     - DIAMOND_HOE
     
-  #Items that CAN'T be in a players inventory for the potion effect to work
-  #Just leave alone 
+  #Items that CAN'T be in a players inventory for the potion effect to work  
   blacklist:
     - GOLD_SWORD #So no butter swords
     - DIAMOND_AXE #Or diamond axes if you want regeneration 3 and resistance 1
