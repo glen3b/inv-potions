@@ -39,6 +39,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 	            		while(nondeepconfig.hasNext()){
 	            			Entry<String, Object> entry = nondeepconfig.next();
 	            			String basekey = entry.getKey()+".";
+	            			if(!getConfig().getBoolean(basekey+"ignore", false)){
 	            			String[] configvalues = new String[]{
 	            					getConfig().getString(basekey+"armor.helmet"),
 	            					getConfig().getString(basekey+"armor.chestplate"),
@@ -157,6 +158,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 			            		}
 	            			}
 		            		}
+	            		}
 	            		}}}
 	    }, 150L, 90L);
 	}

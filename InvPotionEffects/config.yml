@@ -1,5 +1,11 @@
 #You declare each potion under a title (it doesn't matter what title)
 potion1:
+  #The ignore property, so don't touch if you DON'T want to use potion1, but DO REMOVE if you DO want to use potion1
+  #Workaround for the fact that the default config is used: delete the line below if you DO want to use this potion
+  ignore: true
+  
+  
+  
   # Item in hand, do not define if you do not want an item in hand
   
   # handitem: DO_NOT_USE
@@ -31,6 +37,10 @@ potion1:
     - DAMAGE_RESISTANCE::1
 #Sample number 2
 diamondpotion:
+  #The ignore property, so don't touch if you DON'T want to use diamondpotion, but DO REMOVE if you DO want to use diamondpotion
+  #Workaround for the fact that the default config is used: delete the line below if you DO want to use this potion
+  ignore: true
+  
   #I'm checking the item in hand
   handitem: DIAMOND_SWORD
   #Since I don't have criteria (except armor), I don't need a criteria place
