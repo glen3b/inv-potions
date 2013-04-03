@@ -321,6 +321,18 @@ public class InventoryPotionEffects extends JavaPlugin {
 				this.reloadConfig();
 				sender.sendMessage("§aReloaded configuration.");
 				return true;
+			} else if (args[0].equalsIgnoreCase("remove")) { 
+				if (args.length < 2) {
+					sender.sendMessage("§cToo few arguments. Please specify a configuration name for the potion to remove.");
+					return false;
+				}
+				getConfig().set(args[1], null);
+				saveConfig();
+				reloadConfig();
+				sender.sendMessage("§aRemoved potion effect " + args[1]
+						+ " from configuration.");
+				return true;
+			
 			} else if (args[0].equalsIgnoreCase("add")) {
 				if (!(sender instanceof Player)) {
 					sender.sendMessage("§cI'm sorry, at the moment only players can use this command.");
