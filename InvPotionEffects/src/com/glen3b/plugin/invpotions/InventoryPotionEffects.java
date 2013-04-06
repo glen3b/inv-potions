@@ -290,9 +290,15 @@ public class InventoryPotionEffects extends JavaPlugin {
 																.toUpperCase());
 												try {
 													p.removePotionEffect(potionefc);
+													if(potionefc == PotionEffectType.NIGHT_VISION){
+														p.addPotionEffect(new PotionEffect(
+																potionefc, 1250,
+																level));
+													}else{
 													p.addPotionEffect(new PotionEffect(
 															potionefc, 250,
 															level));
+													}
 												} catch (NullPointerException n) {
 													getLogger()
 															.log(Level.WARNING,
