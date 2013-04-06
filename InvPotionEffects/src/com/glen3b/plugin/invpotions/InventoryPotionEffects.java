@@ -291,7 +291,7 @@ public class InventoryPotionEffects extends JavaPlugin {
 												try {
 													p.removePotionEffect(potionefc);
 													p.addPotionEffect(new PotionEffect(
-															potionefc, 200,
+															potionefc, 250,
 															level));
 												} catch (NullPointerException n) {
 													getLogger()
