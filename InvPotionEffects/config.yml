@@ -8,6 +8,13 @@ potion1:
   
   # handitem: DO_NOT_USE
   
+  #If you set to true, and at any point a player's inventory does not
+  #match these criteria, IT WILL BE REMOVED.
+  #Basically, if this is true, even if the player drinks a potion giving any of these effects,
+  #the effect will be removed.
+  #This will, however, create stricter rules for the potion effect.
+  forcefulPotionEffect: false
+  
   #Required items in the player's inventory (don't define this section if you don't have any blacklist items)
   criteria:
     - DIRT
@@ -42,6 +49,13 @@ diamondpotion:
   handitem: DIAMOND_SWORD
   #Since I don't have criteria (except armor), I don't need a criteria place
   #Or a blacklist, so no item invalidates the potion
+  
+  #If you set to true, and at any point a player's inventory does not
+  #match these criteria, IT WILL BE REMOVED.
+  #Basically, if this is true, even if the player drinks a potion giving any of these effects,
+  #the effect will be removed.
+  #This will, however, create stricter rules for the potion effect.
+  forcefulPotionEffect: false
   
   armor:
     helmet: Ignore

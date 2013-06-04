@@ -6,20 +6,42 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class InventoryPotionEffects extends JavaPlugin {
+public class InventoryPotionEffects extends JavaPlugin implements Listener {
 
 	private int taskid;
-
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onPlayerInventoryEvent(InventoryClickEvent event)
+	{
+		PlayerInventory pi = null;
+	if(event.getInventory().getName() == "Inventory"){
+		//is a player inventory, I think
+		try{
+			pi = (PlayerInventory)event.getInventory();
+		}catch(ClassCastException c){
+			//Nope!
+			return;
+		}
+		//At this point, it is probably a player inventory we are dealing with
+		performInventoryLogic(pi.getHolder());
+		
+	}
+	}
 	protected boolean nonstandardArmor(PlayerInventory pi, int index) {
 		switch (index) {
 		case 0:
@@ -59,259 +81,290 @@ public class InventoryPotionEffects extends JavaPlugin {
 		}
 	}
 
+	protected void performInventoryLogic(HumanEntity humanEntity){
+		Iterator<Entry<String, Object>> nondeepconfig = getConfig()
+				.getRoot().getValues(false).entrySet()
+				.iterator();
+		if (humanEntity != null) {
+			PlayerInventory pi = humanEntity.getInventory();
+			ItemStack[] parmor = pi.getArmorContents();
+			while (nondeepconfig.hasNext()) {
+				Entry<String, Object> entry = nondeepconfig
+						.next();
+				String basekey = entry.getKey() + ".";
+				if (!getConfig().getBoolean(
+						basekey + "ignore", false)) {
+					String[] configvalues = new String[] {
+							getConfig()
+									.getString(
+											basekey
+													+ "armor.helmet"),
+							getConfig()
+									.getString(
+											basekey
+													+ "armor.chestplate"),
+							getConfig()
+									.getString(
+											basekey
+													+ "armor.leggings"),
+							getConfig()
+									.getString(
+											basekey
+													+ "armor.boots") };
+					List<ArmorConfigValueType> armorcfg = ArmorConfigValueType
+							.populateList(configvalues);
+					int[] numbers = new int[] { -257, -257,
+							-257, -257 };
+					Material[] armor = new Material[] {
+							Material.getMaterial(configvalues[0]),
+							Material.getMaterial(configvalues[1]),
+							Material.getMaterial(configvalues[2]),
+							Material.getMaterial(configvalues[3]) };
+					for (int i = 0; i < 4; i++) {
+						boolean usenum = true;
+						try {
+							numbers[i] = Integer
+									.parseInt(configvalues[i]);
+						} catch (NumberFormatException e) {
+							usenum = false;
+						}
+						if (usenum) {
+							armor[i] = Material
+									.getMaterial(numbers[i]);
+						}
+					}
+					boolean armorvalid = true;
+					boolean inventoryvalid = true;
+					for (int i = 0; i < 4; i++) {
+						switch (armorcfg.get(i)) {
+						case Acknowledge:
+							ItemStack checking;
+							boolean useItemStack = false;
+							if (configvalues[i].split(":").length == 1) {
+								checking = new ItemStack(
+										Material.getMaterial(configvalues[i]));
+							} else {
+								useItemStack = true;
+								checking = new ItemStack(
+										Material.getMaterial(configvalues[i]
+												.split(":")[0]),
+										1,
+										Short.parseShort(configvalues[i]
+												.split(":")[1]));
+							}
+							if (!(useItemStack ? parmor[3 - i]
+									.getType() == checking
+									.getType()
+									&& parmor[3 - i]
+											.getDurability() == checking
+											.getDurability()
+									: parmor[3 - i]
+											.getType() == Material
+											.getMaterial(configvalues[i]))) {
+								armorvalid = false;
+							}
+							break;
+						case NonStandard:
+							if (!nonstandardArmor(pi, 3 - i)) {
+								armorvalid = false;
+							}
+							break;
+						case Ignore:
+							break;
+						}
+					}
+					List<String> criteria = getConfig()
+							.getStringList(
+									basekey + "criteria");
+					if (criteria != null) {
+						for (int i = 0; i < criteria.size(); i++) {
+							ItemStack checking;
+							boolean useItemStack = false;
+							if (criteria.get(i).split(":").length == 1) {
+								checking = new ItemStack(
+										Material.getMaterial(criteria
+												.get(i)));
+							} else {
+								useItemStack = true;
+								checking = new ItemStack(
+										Material.getMaterial(criteria
+												.get(i)
+												.split(":")[0]),
+										1,
+										Short.parseShort(criteria
+												.get(i)
+												.split(":")[1]));
+							}
+							if (checking != null
+									&& Material
+											.getMaterial(criteria
+													.get(i)) != null
+									&& !(useItemStack ? pi
+											.containsAtLeast(
+													checking,
+													1)
+											: pi.contains(Material
+													.getMaterial(criteria
+															.get(i))))) {
+								inventoryvalid = false;
+							}
+						}
+					}
+					String handitem = getConfig()
+							.getString(basekey + "handitem");
+					if (handitem != null) {
+						ItemStack checking;
+						boolean useItemStack = false;
+						if (handitem.split(":").length == 1) {
+							checking = new ItemStack(
+									Material.getMaterial(handitem));
+						} else {
+							useItemStack = true;
+							checking = new ItemStack(
+									Material.getMaterial(handitem
+											.split(":")[0]),
+									1,
+									Short.parseShort(handitem
+											.split(":")[1]));
+						}
+						if (!(useItemStack ? pi
+								.getItemInHand().getType() == checking
+								.getType()
+								&& pi.getItemInHand()
+										.getDurability() == checking
+										.getDurability()
+								: pi.getItemInHand()
+										.getType() == Material
+										.getMaterial(handitem))) {
+							inventoryvalid = false;
+						}
+					}
+
+					// And now, check for blacklisted items
+					List<String> blacklist = getConfig()
+							.getStringList(
+									basekey + "blacklist");
+					if (blacklist != null) {
+						for (int i = 0; i < blacklist
+								.size(); i++) {
+							String itemroot = blacklist
+									.get(i);
+							Material checking = Material
+									.getMaterial(itemroot
+											.split(":")[0]);
+							boolean useDamage = false;
+							useDamage = itemroot.split(":").length > 1;
+							if (useDamage ? pi
+									.containsAtLeast(
+											new ItemStack(
+													checking,
+													1,
+													Short.parseShort(itemroot
+															.split(":")[1])),
+											1)
+									: pi.contains(checking)) {
+								inventoryvalid = false;
+							}
+						}
+					}
+
+					if(armorvalid && inventoryvalid){
+						//This is a valid potion effect
+					if (!humanEntity.hasPermission("invpotions.bypass") && (humanEntity.hasPermission("invpotions.potion."
+									+ entry.getKey()) || humanEntity
+										.hasPermission("invpotions.potion.*"))) {
+						List<String> potioneffects = getConfig()
+								.getStringList(
+										basekey + "effects");
+						for (int i = 0; i < potioneffects
+								.size(); i++) {
+							String[] components = potioneffects
+									.get(i).split("::");
+							int level;
+							try {
+								level = Integer
+										.parseInt(components[1]) - 1;
+							} catch (NumberFormatException n) {
+								getLogger().log(
+										Level.WARNING,
+										"Your potion effect configuration has an invalid number as a level in "
+												+ basekey);
+								break;
+							} catch (ArrayIndexOutOfBoundsException n) {
+								getLogger()
+										.log(Level.WARNING,
+												"Your potion effect configuration does not have a valid splitting character ('::') in "
+														+ basekey
+														+ " Attempting to assume level 1.");
+								level = 0;
+							}
+							PotionEffectType potionefc = PotionEffectType
+									.getByName(components[0]
+											.toUpperCase());
+							try {
+								humanEntity.removePotionEffect(potionefc);
+								if(potionefc == PotionEffectType.NIGHT_VISION){
+									//Lengthen night vision
+									humanEntity.addPotionEffect(new PotionEffect(
+											potionefc, 1250,
+											level));
+								}else{
+								humanEntity.addPotionEffect(new PotionEffect(
+										potionefc, 250,
+										level));
+								}
+							} catch (NullPointerException n) {
+								getLogger()
+										.log(Level.WARNING,
+												"There appears to be an invalid potion effect in your config file (check in "
+														+ entry.getKey()
+														+ ").");
+							}
+						}
+					}
+				}else{
+					//This is not a potion effect to apply
+					if(getConfig().getBoolean(basekey+"forcefulPotionEffect", false)){
+						//Remove the potion effect.
+						List<String> potioneffects = getConfig()
+								.getStringList(
+										basekey + "effects");
+						for (int i = 0; i < potioneffects
+								.size(); i++) {
+							String[] components = potioneffects
+									.get(i).split("::");
+							PotionEffectType potionefc = PotionEffectType
+									.getByName(components[0]
+											.toUpperCase());
+							try {
+								humanEntity.removePotionEffect(potionefc);
+							} catch (NullPointerException n) {
+								getLogger()
+										.log(Level.WARNING,
+												"There appears to be an invalid potion effect in your config file (check in "
+														+ entry.getKey()
+														+ ").");
+							}
+						}
+					}
+				}
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void onEnable() {
 		this.saveDefaultConfig();
+		this.getServer().getPluginManager().registerEvents(this, this);
 		taskid = this.getServer().getScheduler()
 				.scheduleSyncRepeatingTask(this, new Runnable() {
 
 					@Override
 					public void run() {
 						for (Player p : getServer().getOnlinePlayers()) {
-							Iterator<Entry<String, Object>> nondeepconfig = getConfig()
-									.getRoot().getValues(false).entrySet()
-									.iterator();
-							if (p != null) {
-								PlayerInventory pi = p.getInventory();
-								ItemStack[] parmor = pi.getArmorContents();
-								while (nondeepconfig.hasNext()) {
-									Entry<String, Object> entry = nondeepconfig
-											.next();
-									String basekey = entry.getKey() + ".";
-									if (!getConfig().getBoolean(
-											basekey + "ignore", false)) {
-										String[] configvalues = new String[] {
-												getConfig()
-														.getString(
-																basekey
-																		+ "armor.helmet"),
-												getConfig()
-														.getString(
-																basekey
-																		+ "armor.chestplate"),
-												getConfig()
-														.getString(
-																basekey
-																		+ "armor.leggings"),
-												getConfig()
-														.getString(
-																basekey
-																		+ "armor.boots") };
-										List<ArmorConfigValueType> armorcfg = ArmorConfigValueType
-												.populateList(configvalues);
-										int[] numbers = new int[] { -257, -257,
-												-257, -257 };
-										Material[] armor = new Material[] {
-												Material.getMaterial(configvalues[0]),
-												Material.getMaterial(configvalues[1]),
-												Material.getMaterial(configvalues[2]),
-												Material.getMaterial(configvalues[3]) };
-										for (int i = 0; i < 4; i++) {
-											boolean usenum = true;
-											try {
-												numbers[i] = Integer
-														.parseInt(configvalues[i]);
-											} catch (NumberFormatException e) {
-												usenum = false;
-											}
-											if (usenum) {
-												armor[i] = Material
-														.getMaterial(numbers[i]);
-											}
-										}
-										boolean armorvalid = true;
-										boolean inventoryvalid = true;
-										for (int i = 0; i < 4; i++) {
-											switch (armorcfg.get(i)) {
-											case Acknowledge:
-												ItemStack checking;
-												boolean useItemStack = false;
-												if (configvalues[i].split(":").length == 1) {
-													checking = new ItemStack(
-															Material.getMaterial(configvalues[i]));
-												} else {
-													useItemStack = true;
-													checking = new ItemStack(
-															Material.getMaterial(configvalues[i]
-																	.split(":")[0]),
-															1,
-															Short.parseShort(configvalues[i]
-																	.split(":")[1]));
-												}
-												if (!(useItemStack ? parmor[3 - i]
-														.getType() == checking
-														.getType()
-														&& parmor[3 - i]
-																.getDurability() == checking
-																.getDurability()
-														: parmor[3 - i]
-																.getType() == Material
-																.getMaterial(configvalues[i]))) {
-													armorvalid = false;
-												}
-												break;
-											case NonStandard:
-												if (!nonstandardArmor(pi, 3 - i)) {
-													armorvalid = false;
-												}
-												break;
-											case Ignore:
-												break;
-											}
-										}
-										List<String> criteria = getConfig()
-												.getStringList(
-														basekey + "criteria");
-										if (criteria != null) {
-											for (int i = 0; i < criteria.size(); i++) {
-												ItemStack checking;
-												boolean useItemStack = false;
-												if (criteria.get(i).split(":").length == 1) {
-													checking = new ItemStack(
-															Material.getMaterial(criteria
-																	.get(i)));
-												} else {
-													useItemStack = true;
-													checking = new ItemStack(
-															Material.getMaterial(criteria
-																	.get(i)
-																	.split(":")[0]),
-															1,
-															Short.parseShort(criteria
-																	.get(i)
-																	.split(":")[1]));
-												}
-												if (checking != null
-														&& Material
-																.getMaterial(criteria
-																		.get(i)) != null
-														&& !(useItemStack ? pi
-																.containsAtLeast(
-																		checking,
-																		1)
-																: pi.contains(Material
-																		.getMaterial(criteria
-																				.get(i))))) {
-													inventoryvalid = false;
-												}
-											}
-										}
-										String handitem = getConfig()
-												.getString(basekey + "handitem");
-										if (handitem != null) {
-											ItemStack checking;
-											boolean useItemStack = false;
-											if (handitem.split(":").length == 1) {
-												checking = new ItemStack(
-														Material.getMaterial(handitem));
-											} else {
-												useItemStack = true;
-												checking = new ItemStack(
-														Material.getMaterial(handitem
-																.split(":")[0]),
-														1,
-														Short.parseShort(handitem
-																.split(":")[1]));
-											}
-											if (!(useItemStack ? pi
-													.getItemInHand().getType() == checking
-													.getType()
-													&& pi.getItemInHand()
-															.getDurability() == checking
-															.getDurability()
-													: pi.getItemInHand()
-															.getType() == Material
-															.getMaterial(handitem))) {
-												inventoryvalid = false;
-											}
-										}
-
-										// And now, check for blacklisted items
-										List<String> blacklist = getConfig()
-												.getStringList(
-														basekey + "blacklist");
-										if (blacklist != null) {
-											for (int i = 0; i < blacklist
-													.size(); i++) {
-												String itemroot = blacklist
-														.get(i);
-												Material checking = Material
-														.getMaterial(itemroot
-																.split(":")[0]);
-												boolean useDamage = false;
-												useDamage = itemroot.split(":").length > 1;
-												if (useDamage ? pi
-														.containsAtLeast(
-																new ItemStack(
-																		checking,
-																		1,
-																		Short.parseShort(itemroot
-																				.split(":")[1])),
-																1)
-														: pi.contains(checking)) {
-													inventoryvalid = false;
-												}
-											}
-										}
-
-										if (armorvalid
-												&& inventoryvalid
-												&& !p.hasPermission("invpotions.bypass")
-												&& (p.hasPermission("invpotions.potion."
-														+ entry.getKey()) || p
-															.hasPermission("invpotions.potion.*"))) {
-											List<String> potioneffects = getConfig()
-													.getStringList(
-															basekey + "effects");
-											for (int i = 0; i < potioneffects
-													.size(); i++) {
-												String[] components = potioneffects
-														.get(i).split("::");
-												int level;
-												try {
-													level = Integer
-															.parseInt(components[1]) - 1;
-												} catch (NumberFormatException n) {
-													getLogger().log(
-															Level.WARNING,
-															"Your potion effect configuration has an invalid number as a level in "
-																	+ basekey);
-													break;
-												} catch (ArrayIndexOutOfBoundsException n) {
-													getLogger()
-															.log(Level.WARNING,
-																	"Your potion effect configuration does not have a valid splitting character ('::') in "
-																			+ basekey
-																			+ " Attempting to assume level 1.");
-													level = 0;
-												}
-												PotionEffectType potionefc = PotionEffectType
-														.getByName(components[0]
-																.toUpperCase());
-												try {
-													p.removePotionEffect(potionefc);
-													if(potionefc == PotionEffectType.NIGHT_VISION){
-														p.addPotionEffect(new PotionEffect(
-																potionefc, 1250,
-																level));
-													}else{
-													p.addPotionEffect(new PotionEffect(
-															potionefc, 250,
-															level));
-													}
-												} catch (NullPointerException n) {
-													getLogger()
-															.log(Level.WARNING,
-																	"There appears to be an invalid potion effect in your config file (check in "
-																			+ entry.getKey()
-																			+ ").");
-												}
-											}
-										}
-									}
-								}
+							performInventoryLogic(p);
 							}
-						}
 					}
 				}, 150L, 90L);
 	}
@@ -323,7 +376,13 @@ public class InventoryPotionEffects extends JavaPlugin {
 				sender.sendMessage("§cToo few arguments.");
 				return false;
 			}
-			if (args[0].equalsIgnoreCase("reload")) {
+			if(args[0].equalsIgnoreCase("help")){
+				sender.sendMessage(ChatColor.GOLD+"Inventory-based potions version"+getDescription().getVersion()+" commands:");
+				sender.sendMessage(ChatColor.GREEN+"/invpotions reload - Reload from the configuration file");
+				sender.sendMessage(ChatColor.GREEN+"/invpotions remove <potion name in config> - Remove the specified potion effect");
+				sender.sendMessage(ChatColor.GREEN+"/invpotions add <potion name> <potion  effect 1> [potion effect 2] ... - Add a new potion matching your inventory with the specified effects");
+			}
+			else if (args[0].equalsIgnoreCase("reload")) {
 				this.reloadConfig();
 				sender.sendMessage("§aReloaded configuration.");
 				return true;

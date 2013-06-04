@@ -9,7 +9,8 @@ commands:
       permission-message: You cannot match your inventory to a potion effect requirement because you don't have invpotions.matchinv
    invpotions:
       description: Administer Inventory-Based Potions (do tasks such as reloading)
-      usage: /invpotions <reload | remove <potion name> | add <potion name> <potion effect> [potion effect] ...>
+      #usage: /invpotions <reload> | remove <potion name> | add <potion name> <potion effects>
+      usage: See /invpotions help for help
       permission: invpotions.administer
       permission-message: You cannot administer Inventory-Based Potions
 permissions:
