@@ -335,16 +335,9 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 											.toUpperCase());
 							try {
 								humanEntity.removePotionEffect(potionefc);
-								if(potionefc == PotionEffectType.NIGHT_VISION){
-									//Lengthen night vision
-									humanEntity.addPotionEffect(new PotionEffect(
-											potionefc, 1250,
-											level));
-								}else{
 								humanEntity.addPotionEffect(new PotionEffect(
-										potionefc, 250,
+										potionefc, getConfig().getInt(basekey+"tickDuration", 250),
 										level));
-								}
 							} catch (NullPointerException n) {
 								getLogger()
 										.log(Level.WARNING,
