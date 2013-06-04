@@ -29,18 +29,15 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 	public void onPlayerInventoryEvent(InventoryClickEvent event)
 	{
 		PlayerInventory pi = null;
-	if(event.getInventory().getName() == "Inventory"){
-		//is a player inventory, I think
 		try{
 			pi = (PlayerInventory)event.getInventory();
 		}catch(ClassCastException c){
-			//Nope!
+			//Nope! Not a player inventory!
 			return;
 		}
 		//At this point, it is probably a player inventory we are dealing with
 		performInventoryLogic(pi.getHolder());
 		
-	}
 	}
 	protected boolean nonstandardArmor(PlayerInventory pi, int index) {
 		switch (index) {
@@ -377,16 +374,29 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 				return false;
 			}
 			if(args[0].equalsIgnoreCase("help")){
-				sender.sendMessage(ChatColor.GOLD+"Inventory-based potions version"+getDescription().getVersion()+" commands:");
+				sender.sendMessage(ChatColor.GOLD+"Inventory-based potions version "+getDescription().getVersion()+" commands:");
 				sender.sendMessage(ChatColor.GREEN+"/invpotions reload - Reload from the configuration file");
 				sender.sendMessage(ChatColor.GREEN+"/invpotions remove <potion name in config> - Remove the specified potion effect");
 				sender.sendMessage(ChatColor.GREEN+"/invpotions add <potion name> <potion  effect 1> [potion effect 2] ... - Add a new potion matching your inventory with the specified effects");
+				sender.sendMessage(ChatColor.GREEN+"/invpotions list - List the names of all potion effects");
 			}
 			else if (args[0].equalsIgnoreCase("reload")) {
 				this.reloadConfig();
 				sender.sendMessage("§aReloaded configuration.");
 				return true;
-			} else if (args[0].equalsIgnoreCase("remove")) { 
+			}
+			else if (args[0].equalsIgnoreCase("list")) {
+				Iterator<Entry<String, Object>> nondeepconfig = getConfig()
+						.getRoot().getValues(false).entrySet()
+						.iterator();
+					while (nondeepconfig.hasNext()) {
+						Entry<String, Object> entry = nondeepconfig
+								.next();
+						sender.sendMessage(ChatColor.AQUA+entry.getKey());
+					}
+				return true;
+			}
+			else if (args[0].equalsIgnoreCase("remove")) { 
 				if (args.length < 2) {
 					sender.sendMessage("§cToo few arguments. Please specify a configuration name for the potion to remove.");
 					return false;
