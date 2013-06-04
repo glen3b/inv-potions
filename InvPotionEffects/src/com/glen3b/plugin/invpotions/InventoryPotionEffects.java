@@ -20,6 +20,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -392,13 +393,19 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 							}
 					}
 				}, 150L, 90L);
+		Iterator<Entry<String, Object>> nondeepconfig = getConfig()
+				.getRoot().getValues(false).entrySet()
+				.iterator();
+		while(nondeepconfig.hasNext()){
+			getServer().getPluginManager().addPermission(new Permission("invpotions.potion."+nondeepconfig.next().getKey()));
+		}
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label,
 			String[] args) {
 		if (cmd.getName().equalsIgnoreCase("invpotions")) {
 			if (args.length < 1) {
-				sender.sendMessage("§cToo few arguments.");
+				sender.sendMessage(ChatColor.RED+"Too few arguments.");
 				return false;
 			}
 			if(args[0].equalsIgnoreCase("help")){
@@ -410,7 +417,7 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 			}
 			else if (args[0].equalsIgnoreCase("reload")) {
 				this.reloadConfig();
-				sender.sendMessage("§aReloaded configuration.");
+				sender.sendMessage(ChatColor.GREEN+"Reloaded configuration.");
 				return true;
 			}
 			else if (args[0].equalsIgnoreCase("list")) {
@@ -426,27 +433,27 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 			}
 			else if (args[0].equalsIgnoreCase("remove")) { 
 				if (args.length < 2) {
-					sender.sendMessage("§cToo few arguments. Please specify a configuration name for the potion to remove.");
+					sender.sendMessage(ChatColor.RED+"Too few arguments. Please specify a configuration name for the potion to remove.");
 					return false;
 				}
 				getConfig().set(args[1], null);
 				saveConfig();
 				reloadConfig();
-				sender.sendMessage("§aRemoved potion effect " + args[1]
+				sender.sendMessage(ChatColor.GREEN+"Removed potion effect " + args[1]
 						+ " from configuration.");
 				return true;
 			
 			} else if (args[0].equalsIgnoreCase("add")) {
 				if (!(sender instanceof Player)) {
-					sender.sendMessage("§cI'm sorry, at the moment only players can use this command.");
+					sender.sendMessage(ChatColor.RED+"Only players can use this command.");
 					return true;
 				}
 				if (args.length < 2) {
-					sender.sendMessage("§cToo few arguments. Please specify a configuration name for this potion.");
+					sender.sendMessage(ChatColor.RED+"Too few arguments. Please specify a configuration name for this potion.");
 					return false;
 				}
 				if (args.length < 3) {
-					sender.sendMessage("§cToo few arguments. Please specify potion effects to use.");
+					sender.sendMessage(ChatColor.RED+"Too few arguments. Please specify potion effects to use.");
 					return false;
 				}
 				Player invbase = (Player) sender;
@@ -489,7 +496,7 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 			boolean getplayer = true;
 			if (!(sender instanceof Player)) {
 				if (args.length < 2) {
-					sender.sendMessage("§cToo few arguments (console users must pass player name).");
+					sender.sendMessage(ChatColor.RED+"Too few arguments (console users must pass player name).");
 					return false;
 				}
 				getplayer = false;
@@ -498,11 +505,11 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 				getplayer = false;
 			}
 			if (args.length < 1) {
-				sender.sendMessage("§cToo few arguments.");
+				sender.sendMessage(ChatColor.RED+"Too few arguments.");
 				return false;
 			}
 			if (args.length > 2) {
-				sender.sendMessage("§cToo many arguments from your friend /matchinv.");
+				sender.sendMessage(ChatColor.RED+"Too many arguments.");
 				return false;
 			}
 			Player target = (Player) sender;
@@ -559,13 +566,13 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 					}
 				}
 			} catch (NullPointerException n) {
-				sender.sendMessage("§cAn error occured.");
+				sender.sendMessage(ChatColor.RED+"An error occured.");
 				if (target == null) {
-					sender.sendMessage("§cThe player you targeted couldn't be found.");
+					sender.sendMessage(ChatColor.RED+"The player you targeted couldn't be found.");
 				}
 				return true;
 			} catch (NumberFormatException nf) {
-				sender.sendMessage("§cError parsing damage value in configuration.");
+				sender.sendMessage(ChatColor.RED+"Error parsing damage value in configuration.");
 				return true;
 			}
 			try {
@@ -607,14 +614,14 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 					target.getInventory().setBoots(add);
 				}
 			} catch (NullPointerException n) {
-				sender.sendMessage("§cEither a bad material name or the potion doesn't exist.");
+				sender.sendMessage(ChatColor.RED+"Either a bad material name or the potion doesn't exist.");
 				return true;
 			} catch (NumberFormatException nf) {
-				sender.sendMessage("§cError parsing damage value in configuration.");
+				sender.sendMessage(ChatColor.RED+"Error parsing damage value in configuration.");
 				return true;
 			}
-			sender.sendMessage("§aMatched inventory of "
-					+ target.getDisplayName() + "§a to requirements of "
+			sender.sendMessage(ChatColor.GREEN+"Matched inventory of "
+					+ target.getDisplayName() + ChatColor.GREEN + " to requirements of "
 					+ args[0] + ".");
 			return true;
 		}
