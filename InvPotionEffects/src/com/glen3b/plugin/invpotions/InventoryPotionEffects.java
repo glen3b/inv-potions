@@ -424,10 +424,35 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 				Iterator<Entry<String, Object>> nondeepconfig = getConfig()
 						.getRoot().getValues(false).entrySet()
 						.iterator();
+				sender.sendMessage(ChatColor.GREEN+"All configured potion effects:");
 					while (nondeepconfig.hasNext()) {
 						Entry<String, Object> entry = nondeepconfig
 								.next();
-						sender.sendMessage(ChatColor.AQUA+entry.getKey());
+						boolean isValid = getConfig().getConfigurationSection(entry.getKey()+".armor") != null && getConfig().getConfigurationSection(entry.getKey()+".effects") != null;
+						if(isValid){
+							List<String> potioneffects = getConfig()
+									.getStringList(
+											entry.getKey()+".effects");
+							
+							for (int i = 0; i < potioneffects
+									.size(); i++) {
+								String[] components = potioneffects
+										.get(i).split("::");
+								int level = -1;
+								if(components.length < 1){
+									try{
+										level = Integer.parseInt(components[1]) - 1;
+										
+									}catch(NumberFormatException n){
+										isValid = false;
+									}
+								}
+								if(level < 0 || components.length != 2 || PotionEffectType.getByName(components[0]) == null){
+									isValid = false;
+								}
+							}
+						}
+						sender.sendMessage((isValid ? ChatColor.AQUA : "(Invalid configuration) "+ChatColor.RED)+entry.getKey());
 					}
 				return true;
 			}

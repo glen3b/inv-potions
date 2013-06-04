@@ -20,7 +20,7 @@ potion1:
   #takes longer to go away after the condition is not met
   tickDuration: 250
   
-  #Required items in the player's inventory (don't define this section if you don't have any blacklist items)
+  #Required items in the player's inventory (don't define this section if you don't have any items)
   criteria:
     - DIRT
     - DIAMOND_HOE
