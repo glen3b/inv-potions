@@ -13,8 +13,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,11 +27,14 @@ import org.bukkit.potion.PotionEffectType;
 public class InventoryPotionEffects extends JavaPlugin implements Listener {
 
 	private int taskid;
+	int tickDelayEventProcess = 2;
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerInventoryEvent(InventoryClickEvent event)
 	{
 		PlayerInventory pi = null;
+		if(event.getInventory().getType() == InventoryType.PLAYER){
+			//I have a funny feeling this is a player's inventory
 		try{
 			pi = (PlayerInventory)event.getInventory();
 		}catch(ClassCastException c){
@@ -36,9 +42,35 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 			return;
 		}
 		//At this point, it is probably a player inventory we are dealing with
-		performInventoryLogic(pi.getHolder());
+		final HumanEntity player = pi.getHolder();
+		//Ugly! To do post-event processing.
+		getServer().getScheduler()
+        .scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+            	performInventoryLogic(player);
+            }
+        }, tickDelayEventProcess);
+		
+		}
 		
 	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPlayerInventoryEvent(PlayerItemHeldEvent event)
+	{
+		final HumanEntity player = event.getPlayer();
+		//Ugly! To do post-event processing.
+		getServer().getScheduler()
+        .scheduleSyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+            	performInventoryLogic(player);
+            }
+        }, tickDelayEventProcess);
+		
+		}
+		
 	protected boolean nonstandardArmor(PlayerInventory pi, int index) {
 		switch (index) {
 		case 0:
@@ -207,6 +239,8 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 							}
 						}
 					}
+					
+					//Item in hand
 					String handitem = getConfig()
 							.getString(basekey + "handitem");
 					if (handitem != null) {
@@ -266,13 +300,14 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 					}
 
 					if(armorvalid && inventoryvalid){
-						//This is a valid potion effect
+						//This is a valid potion effect to apply
 					if (!humanEntity.hasPermission("invpotions.bypass") && (humanEntity.hasPermission("invpotions.potion."
 									+ entry.getKey()) || humanEntity
 										.hasPermission("invpotions.potion.*"))) {
 						List<String> potioneffects = getConfig()
 								.getStringList(
 										basekey + "effects");
+						
 						for (int i = 0; i < potioneffects
 								.size(); i++) {
 							String[] components = potioneffects
@@ -322,7 +357,7 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 				}else{
 					//This is not a potion effect to apply
 					if(getConfig().getBoolean(basekey+"forcefulPotionEffect", false)){
-						//Remove the potion effect.
+						//Remove the potion effect. it is forceful.
 						List<String> potioneffects = getConfig()
 								.getStringList(
 										basekey + "effects");
