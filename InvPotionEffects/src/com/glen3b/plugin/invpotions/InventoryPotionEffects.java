@@ -428,7 +428,7 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 					while (nondeepconfig.hasNext()) {
 						Entry<String, Object> entry = nondeepconfig
 								.next();
-						boolean isValid = getConfig().getConfigurationSection(entry.getKey()+".armor") != null && getConfig().getConfigurationSection(entry.getKey()+".effects") != null;
+						boolean isValid = getConfig().getConfigurationSection(entry.getKey()+".armor") != null && getConfig().getStringList(entry.getKey()+".effects") != null;
 						if(isValid){
 							List<String> potioneffects = getConfig()
 									.getStringList(
@@ -439,10 +439,9 @@ public class InventoryPotionEffects extends JavaPlugin implements Listener {
 								String[] components = potioneffects
 										.get(i).split("::");
 								int level = -1;
-								if(components.length < 1){
+								if(components.length > 1){
 									try{
 										level = Integer.parseInt(components[1]) - 1;
-										
 									}catch(NumberFormatException n){
 										isValid = false;
 									}
